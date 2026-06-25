@@ -26,6 +26,8 @@ class Settings:
     openai_compat_model: str = _get("OPENAI_COMPAT_MODEL")
     ollama_base_url: str = _get("OLLAMA_BASE_URL", "http://localhost:11434/v1")
     ollama_model: str = _get("OLLAMA_MODEL", "llama3.1")
+    # Local CPU generation can be slow; allow a long read timeout for chat calls.
+    llm_request_timeout: int = int(_get("LLM_TIMEOUT", "600"))
 
     github_token: str = _get("GITHUB_TOKEN")
 

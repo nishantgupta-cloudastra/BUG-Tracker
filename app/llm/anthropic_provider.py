@@ -80,6 +80,7 @@ class AnthropicProvider(LLMProvider):
         tools: Optional[list[ToolDef]] = None,
         max_tokens: int = 4096,
         force_tool: Optional[str] = None,
+        response_format: Optional[dict] = None,  # ignored (Anthropic uses tool-based output)
     ) -> ChatTurn:
         client = self._client_lazy()
         kwargs: dict = {

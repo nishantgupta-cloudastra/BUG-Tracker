@@ -74,8 +74,10 @@ class LLMProvider(ABC):
         tools: Optional[list[ToolDef]] = None,
         max_tokens: int = 4096,
         force_tool: Optional[str] = None,
+        response_format: Optional[dict] = None,
     ) -> ChatTurn:
-        """One model turn. `force_tool` requires the model to call that tool."""
+        """One model turn. `force_tool` requires the model to call that tool;
+        `response_format` (OpenAI-compatible providers) constrains output to JSON."""
 
     def describe(self) -> dict[str, Any]:
         return {"name": self.name, "model": self.model}

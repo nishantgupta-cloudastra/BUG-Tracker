@@ -11,6 +11,7 @@ from typing import Optional
 
 import requests
 
+from ..config import settings
 from .base import ChatTurn, LLMProvider, ProviderError, ToolCall, ToolDef
 
 
@@ -89,6 +90,7 @@ class OpenAICompatProvider(LLMProvider):
         tools: Optional[list[ToolDef]] = None,
         max_tokens: int = 4096,
         force_tool: Optional[str] = None,
+        response_format: Optional[dict] = None,
     ) -> ChatTurn:
         body: dict = {
             "model": self.model,
@@ -99,10 +101,13 @@ class OpenAICompatProvider(LLMProvider):
             body["tools"] = self._to_openai_tools(tools)
         if force_tool:
             body["tool_choice"] = {"type": "function", "function": {"name": force_tool}}
+        if response_format:
+            body["response_format"] = response_format
 
         try:
             r = requests.post(
-                f"{self.base_url}/chat/completions", headers=self._headers(), json=body, timeout=180
+                f"{self.base_url}/chat/completions", headers=self._headers(), json=body,
+                timeout=settings.llm_request_timeout,
             )
         except requests.RequestException as exc:
             raise ProviderError(f"{self.name} connection failed: {exc}", recoverable=True)
